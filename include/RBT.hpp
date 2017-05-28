@@ -10,9 +10,9 @@ struct Node
 {
 	T value;
 	bool color;
-	Node<T>* left;
-	Node<T>* right;
-	Node<T>* parent;
+	Node* left;
+	Node* right;
+	Node* parent;
 };
 
 template<typename T>
