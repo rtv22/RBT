@@ -1,201 +1,280 @@
-#include <iostream> 
-#include <string> 
-#include <fstream> 
-#include <cstdint> 
+#include <iostream>
 
 using namespace std;
 
 template <typename T>
 struct Node
 {
-	Node *left;
-	Node *right;
-	T data;
+	const bool BLACK = 1;
+	const bool RED = 0;
+	T value;
+	bool color;
+	Node* left;
+	Node* right;
+	Node* parent;
 };
 
-template <typename T>
-class BinaryTree;
-
-template <typename T>
-std::ostream& operator<<(std::ostream&, const BinaryTree<T>&);
-
-template <typename T>
-class BinaryTree
+template<typename T> 
+class RBT
 {
 private:
-	Node<T>*root;
-	int count = 0;
+	Node<T>* root;
+	Node<T>* NIL;
 public:
-	BinaryTree();
-	~BinaryTree();
-	Node<T>* root_();
-	unsigned int getCount()const;
-	void insert_node(const T&x);
-	void deleteNode(Node<T>* temp);
-	Node<T> *find_node(const T&, Node<T>*)const;
-	bool remove_element(Node<T>* parent, Node<T>* current, const T& val);
-	bool deleteVal(const T& value);
-	void writing(const std::string& filename)const;
-	friend std::ostream& operator<<<>(std::ostream&, const BinaryTree<T>&);
+	RBT();
+	~RBT();
+	bool _color(const T&) const;
+	Node<T>* _root()const;
+	Node<T>* _NIL*()const;
+	Node<T>* findNode(const T&;
+	void deleteNode(Node<T>*);
+	void rotateLeft(Node<T>*);
+	void rotateRight(Node<T>*);
+	void insert(const T&);
+	void insertFixup(Node<T>*);
 };
 
 template <typename T>
-BinaryTree<T>::BinaryTree()
+RBT<T>::RBT()
 {
-	root = nullptr;
+	NIL = new Node<T>;
+	NIL->parent = nullptr;
+	NIL->left = nullptr;
+	NIL->right = nullptr;
+	NIL->color = black;
+	root = NIL;
 }
 
 template<typename T>
-Node<T>* BinaryTree<T>::root_()
-{
-	return root;
-}
-
-template <typename T>
-BinaryTree<T>::~BinaryTree()
+RBT::~RBT()
 {
 	deleteNode(root);
 }
 
 template <typename T>
-unsigned int BinaryTree<T>::getCount()const
+void RBT<T>::deleteNode(Node<T>* temp)
 {
-	return count;
-}
-
-
-template<typename T>
-void BinaryTree<T>::insert_node(const T&x)
-{
-	if (find_node(x, root_())) return;
-	Node<T>* MyTree = new Node<T>;
-	MyTree->data = x;
-	MyTree->left = MyTree->right = 0;
-	Node<T>* buff = root;
-	Node<T>* temp = root;
-	while (temp)
-	{
-		buff = temp;
-		if (x < temp->data)
-			temp = temp->left;
-		else
-			temp = temp->right;
+	if (!temp){
+		return 0;
 	}
-	if (!buff)
-		root = MyTree;
-	else
-	{
-		if (x < buff->data)
-			buff->left = MyTree;
-		else
-			buff->right = MyTree;
-	}
-	++count;
-}
-
-template<typename T>
-Node<T>* BinaryTree<T>::find_node(const T& data, Node<T>* temp) const
-{
-	if (temp == 0 || data == temp->data)
-		return temp;
-	if (data > temp->data)
-		return find_node(data, temp->right);
-	else
-		return find_node(data, temp->left);
-}
-
-template<typename T>
-void BinaryTree<T>::writing(const std::string& filename)const
-{
-	ofstream file_1(filename);
-	file_1 << count << "\t";
-	output(file_1, root);
-	file_1.close();
-}
-
-template<typename T>
-void BinaryTree<T>::deleteNode(Node<T>* temp)
-{
-	if (!temp)
-		return;
-	if (temp->left)
-	{
-		deleteNode(temp->left);
-		temp->left = nullptr;
-	}
-
-	if (temp->right)
-	{
-		deleteNode(temp->right);
-		temp->right = nullptr;
-	}
+	deleteNode(temp->left);
+	deleteNode(temp->right);
 	delete temp;
 }
 
-template <typename T>
-std::ostream& output(std::ostream& ost, const Node<T>* node, unsigned int level)
+template<typename T>
+bool RBT<T>::_color(const T& value)const
 {
-	if (!node)
-		return ost;
-	output(ost, node->right, level + 1);
-	for (unsigned int i = 0; i < level; i++)
-		ost << "\t";
-	ost << node->data << std::endl;
-	output(ost, node->left, level + 1);
-	return ost;
+	return search(value)->color;
+}
+
+template <typename T>
+Node<T>* _root()const
+{
+	return root;
+}
+
+template <typename T>
+Node<T>* _NIL()const
+{
+	return NIL;
 }
 
 template<typename T>
-bool BinaryTree<T>::remove_element(Node<T>* parent, Node<T>* current, const T& val)
+void RBT<T>::rotateLeft(Node<T> *x)
 {
-	if (!current) return false;
-	if (current->data == val)
+	Node *y = x->right;
+	x->right = y->left;
+	if (y->left != NIL)
 	{
-		if (current->left == NULL || current->right == NULL) {
-			Node<T>* temp = current->left;
-			if (current->right) temp = current->right;
-			if (parent) {
-				if (parent->left == current) {
-					parent->left = temp;
-				}
-				else {
-					parent->right = temp;
-				}
-			}
-			else {
-				this->root = temp;
-			}
-		}
-		else {
-			Node<T>* validSubs = current->right;
-			while (validSubs->left) {
-				validSubs = validSubs->left;
-			}
-			T temp = current->data;
-			current->data = validSubs->data;
-			validSubs->data = temp;
-			return remove_element(current, current->right, temp);
-		}
-		delete current;
-		count--;
-		return true;
+		y->left->parent = x;
 	}
-	if (current->data > val)
-		return remove_element(current, current->left, val);
-	else
-		return remove_element(current, current->right, val);
+	if (y != NIL)
+	{
+		y->parent = x->parent;
+	}
+	if (x->parent) 
+	{
+		if (x == x->parent->left)
+		{
+			x->parent->left = y;
+		}
+		else
+		{
+			x->parent->right = y;
+		}
+	}
+	else 
+	{
+		root = y;
+	}
+	y->left = x;
+	if (x != NIL)
+	{
+		x->parent = y;
+	}
 }
 
 template<typename T>
-bool BinaryTree<T>::deleteVal(const T& value)
-{
-	return this->remove_element(NULL, root, value);
+void RBT<T>::rotateRight(Node<T> *x) {
+	Node *y = x->left;
+	x->left = y->right;
+	if (y->right != NIL) 
+	{
+		y->right->parent = x;
+	}
+	if (y != NIL)
+	{
+		y->parent = x->parent;
+	}
+	if (x->parent) 
+	{
+		if (x == x->parent->right)
+		{
+			x->parent->right = y;
+		}
+		else
+		{
+			x->parent->left = y;
+		}
+	}
+	else 
+	{
+		root = y;
+	}
+	y->right = x;
+	if (x != NIL)
+	{
+		x->parent = y;
+	}
 }
 
+template <typename T>
+void RBT<T>::insert(const T& added)
+{
+	if (search(added))
+	{
+		std::cout << "This value's already added in the tree\n";
+		return 0;
+	}
+	Node<T>* daughter = new Node<T>;
+	daughter->value = added;
+	daughter->color = RED;
+	daughter->left = daughter->right = daughter->parent = NIL;
+	Node<T>* parent = NIL;
+	Node<T>* temp = root;
+	if (root == NIL)
+	{
+		root = daughter;
+		root->color = BLACK;
+		return 0;
+	}
+	while (temp != NIL)
+	{
+		if (daughter->value == temp->value)
+		{
+			return 0;
+		}
+		parent = temp;
+		if (added < temp->value)
+		{
+			temp = temp->left;
+		}
+		else
+		{
+			temp = temp->right;
+		}
+	}
+	if (added < parent->value)
+	{
+		parent->left = daughter;
+	}
+	else
+	{
+		parent->right = daughter;
+
+	}
+	daughter->parent = parent;
+	insertFix(daughter);
+}
+
+template<typename T>
+void RBT<T>::insertFixup(Node<T> *x) 
+{
+	while (x != root && x->parent->color == RED) 
+	{
+		if (x->parent == x->parent->parent->left) 
+		{
+			Node *y = x->parent->parent->right;
+			if (y->color == RED) 
+			{
+				/* uncle is RED */
+				x->parent->color = BLACK;
+				y->color = BLACK;
+				x->parent->parent->color = RED;
+				x = x->parent->parent;
+			}
+			else 
+			{
+				/* uncle is BLACK */
+				if (x == x->parent->right) {
+					/* make x a left child */
+					x = x->parent;
+					rotateLeft(x);
+				}
+				/* recolor and rotate */
+				x->parent->color = BLACK;
+				x->parent->parent->color = RED;
+				rotateRight(x->parent->parent);
+			}
+		}
+		else
+		{
+			/* mirror image of above code */
+			Node<T> *y = x->parent->parent->left;
+			if (y->color == RED) 
+			{
+				/* uncle is RED */
+				x->parent->color = BLACK;
+				y->color = BLACK;
+				x->parent->parent->color = RED;
+				x = x->parent->parent;
+			}
+			else 
+			{
+				/* uncle is BLACK */
+				if (x == x->parent->left) {
+					x = x->parent;
+					rotateRight(x);
+				}
+				x->parent->color = BLACK;
+				x->parent->parent->color = RED;
+				rotateLeft(x->parent->parent);
+			}
+		}
+	}
+	root->color = BLACK;
+}
 
 template <typename T>
-std::ostream& operator<<(std::ostream& ost, const BinaryTree<T>& temp)
+Node<T>* RBT<T>::findNode(const T& data)
 {
-	output(ost, temp.root, 0);
-	return ost;
+
+	/*******************************
+	*  find node containing data  *
+	*******************************/
+
+	Node<T> *current = root;
+	while (current != NIL)
+	{
+		if (value == current->value)
+			return current;
+		else
+		{
+			if (value < current->value)
+				current = current->left;
+			else current = current->right;
+		}
+	}
+	return 0;
 }
