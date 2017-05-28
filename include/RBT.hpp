@@ -25,7 +25,7 @@ public:
 	~RBT();
 	bool _color(const T&) const;
 	Node<T>* _root()const;
-	Node<T>* _NIL*()const;
+	Node<T>* _NIL()const;
 	Node<T>* findNode(const T&;
 	void deleteNode(Node<T>*);
 	void rotateLeft(Node<T>*);
