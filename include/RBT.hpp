@@ -22,7 +22,7 @@ private:
 	Node<T>* root;
 	Node<T>* NIL;
 public:
-	RBT<T>::RBT()
+	RBT()
 	{
 		NIL = new Node<T>;
 		NIL->left = NIL->parent = NIL->right = nullptr;
@@ -79,7 +79,7 @@ public:
 		}
 	}
 
-	void RBT<T>::rotateRight(Node<T> *x)
+	void rotateRight(Node<T> *x)
 	{
 		Node<T> *y = x->left;
 		x->left = y->right;
@@ -113,7 +113,7 @@ public:
 		}
 	}
 
-	void RBT<T>::insert(const T& added)
+	void insert(const T& added)
 	{
 		if (findNode(added))
 		{
@@ -161,7 +161,7 @@ public:
 		insertFixup(daughter);
 	}
 
-	void RBT<T>::insertFixup(Node<T> *x)
+	void insertFixup(Node<T> *x)
 	{
 		while (x != root && x->parent->color == RED)
 		{
