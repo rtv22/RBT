@@ -41,6 +41,7 @@ RBT<T>::RBT()
 	NIL = new Node<T>;
 	NIL->parent = NIL->left = NIL->right = nullptr;
 	NIL->color = BLACK;
+	root=NIL;
 }
 
 template<typename T>
