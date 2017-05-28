@@ -23,7 +23,7 @@ private:
 public:
 	RBT();
 	bool _color(const T&) const;
-	Node<T>* RBT<T>::_root()const;
+	Node<T>* _root()const;
 	Node<T>* _NIL()const;
 	void rotateLeft(Node<T>* current);
 	void rotateRight(Node<T> *current);
