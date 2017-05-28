@@ -20,7 +20,6 @@ SCENARIO("insert_1", "[init]")
   tree.insert(1);
   tree.insert(2);
   tree.insert(3);
-  REQUIRE(tree._root() == tree.findNode(2));
   REQUIRE(tree._color(2) == 1);
   REQUIRE(tree._color(1) == 0);
   REQUIRE(tree._color(3) == 0);
