@@ -22,38 +22,38 @@ private:
 	Node<T>* root;
 	Node<T>* NIL;
 public:
-	RBT()
-	{
-		NIL = new Node<T>;
-		NIL->left = NIL->parent = NIL->right = nullptr;
-		NIL->color = black;
-		root = NIL;
-	}
+RBT()
+{
+	NIL = new Node<T>;
+	NIL->left = NIL->parent = NIL->right = nullptr;
+	NIL->color = black;
+	root = NIL;
+}
 
-	bool _color(const T& value)
-	{
-		return findNode(value)->color;
-	}
+bool _color(const T& value)
+{
+	return findNode(value)->color;
+}
 
-	Node<T>* RBT<T>::_root()
-	{
-		return root;
-	}
+Node<T>* _root()
+{
+	return root;
+}
 
-	Node<T>* RBT<T>::_NIL()
-	{
-		return NIL;
-	}
+Node<T>* _NIL()
+{
+	return NIL;
+}
 
-	void rotateLeft(Node<T> *x)
+void rotateLeft(Node<T> *x)
+{
+	Node<T> *y = x->right;
+	x->right = y->left;
+	if (y->left != NIL)
 	{
-		Node<T> *y = x->right;
-		x->right = y->left;
-		if (y->left != NIL)
-		{
-			y->left->parent = x;
-		}
-		if (y != NIL)
+		y->left->parent = x;
+	}
+	if (y != NIL)
 		{
 			y->parent = x->parent;
 		}
