@@ -1,171 +1,121 @@
 #include <iostream>
 
+using namespace std;
+
 const bool BLACK = 1;
 const bool RED = 0;
 
-
-template<typename T> 
+template <typename T>
 struct Node
 {
 	T value;
 	bool color;
-	Node* left;
-	Node* right;
-	Node* parent;
+	Node<T>* left;
+	Node<T>* right;
+	Node<T>* parent;
 };
 
-template<typename T> 
+template<typename T>
 class RBT
 {
 private:
 	Node<T>* root;
 	Node<T>* NIL;
 public:
-	RBT();
-	bool _color(const T&) const;
-	Node<T>* _root()const;
-	Node<T>* _NIL()const;
-	void rotateLeft(Node<T>* current);
-	void rotateRight(Node<T> *current);
-	void insertFixup(Node<T>* current);
-	void insert(const T& added);
-	Node<T>* search(const T& value)const;
-};
-template<typename T>
 	RBT<T>::RBT()
 	{
 		NIL = new Node<T>;
 		NIL->left = NIL->parent = NIL->right = nullptr;
-		NIL->color = BLACK;
+		NIL->color = black;
 		root = NIL;
 	}
 
-	template<typename T>
-	bool RBT<T>::_color(const T& value)const
+	bool _color(const T& value)
 	{
-		return search(value)->color;
+		return findNode(value)->color;
 	}
-	template<typename T>
-	Node<T>* RBT<T>::_root()const
+
+	Node<T>* RBT<T>::_root()
 	{
 		return root;
 	}
 
-	template<typename T>
-	Node<T>* RBT<T>::_NIL()const
+	Node<T>* RBT<T>::_NIL()
 	{
 		return NIL;
 	}
 
-	template<typename T>
-	void RBT<T>::rotateLeft(Node<T>* current)
+	void rotateLeft(Node<T> *x)
 	{
-		Node<T>* temp = current->right;
-		current->right = temp->left;
-		if (temp->left != NIL)
-			temp->left->parent = current;
-		if (temp != NIL)
-			temp->parent = current->parent;
-		if (current->parent != NIL)
+		Node<T> *y = x->right;
+		x->right = y->left;
+		if (y->left != NIL)
 		{
-			if (current == current->parent->left)
-				current->parent->left = temp;
+			y->left->parent = x;
+		}
+		if (y != NIL)
+		{
+			y->parent = x->parent;
+		}
+		if (x->parent)
+		{
+			if (x == x->parent->left)
+			{
+				x->parent->left = y;
+			}
 			else
-				current->parent->right = temp;
+			{
+				x->parent->right = y;
+			}
 		}
 		else
 		{
-			root = temp;
+			root = y;
 		}
-		temp->left = current;
-		if (current != NIL)
-			current->parent = temp;
+		y->left = x;
+		if (x != NIL)
+		{
+			x->parent = y;
+		}
 	}
 
-	template<typename T>
-	void RBT<T>::rotateRight(Node<T> *current)
+	void RBT<T>::rotateRight(Node<T> *x)
 	{
-		Node<T> *temp = current->left;
-		current->left = temp->right;
-		if (temp->right != NIL)
-			temp->right->parent = current;
-		if (temp != NIL)
-			temp->parent = current->parent;
-		if (current->parent != NIL)
+		Node<T> *y = x->left;
+		x->left = y->right;
+		if (y->right != NIL)
 		{
-			if (current == current->parent->right)
-				current->parent->right = temp;
+			y->right->parent = x;
+		}
+		if (y != NIL)
+		{
+			y->parent = x->parent;
+		}
+		if (x->parent)
+		{
+			if (x == x->parent->right)
+			{
+				x->parent->right = y;
+			}
 			else
-				current->parent->left = temp;
+			{
+				x->parent->left = y;
+			}
 		}
 		else
 		{
-			root = temp;
+			root = y;
 		}
-		temp->right = current;
-		if (current != NIL)
-			current->parent = temp;
-	}
-
-	template<typename T>
-	void RBT<T>::insertFixup(Node<T>* current)
-	{
-		while (current != root && current->parent->color == RED)
+		y->right = x;
+		if (x != NIL)
 		{
-			if (current->parent == current->parent->parent->left)
-			{
-				Node<T>* temp = current->parent->parent->right;
-				if (temp->color == RED)
-				{
-					current->parent->color = BLACK;
-					temp->color = BLACK;
-					current->parent->parent->color = RED;
-					current = current->parent->parent;
-				}
-
-				else
-				{
-					if (current == current->parent->right)
-					{
-						current = current->parent;
-						rotateLeft(current);
-					}
-					current->parent->color = BLACK;
-					current->parent->parent->color = RED;
-					rotateRight(current->parent->parent);
-				}
-			}
-
-			else
-			{
-				Node<T>* temp = current->parent->parent->left;
-				if (temp->color == RED)
-				{
-					current->parent->color = BLACK;
-					temp->color = BLACK;
-					current->parent->parent->color = RED;
-					current = current->parent->parent;
-				}
-				else
-				{
-					if (current == current->parent->left)
-					{
-						current = current->parent;
-						rotateRight(current);
-					}
-					current->parent->color = BLACK;
-					current->parent->parent->color = RED;
-					rotateLeft(current->parent->parent);
-				}
-			}
+			x->parent = y;
 		}
-		root->color = BLACK;
 	}
 
-	template<typename T>
 	void RBT<T>::insert(const T& added)
 	{
-		if (search(added))
+		if (findNode(added))
 		{
 			std::cout << "This value's already added in the tree\n";
 			return;
@@ -184,15 +134,19 @@ template<typename T>
 		}
 		while (temp != NIL)
 		{
-
 			if (daughter->value == temp->value)
+			{
 				return;
-
+			}
 			parent = temp;
 			if (added < temp->value)
+			{
 				temp = temp->left;
+			}
 			else
+			{
 				temp = temp->right;
+			}
 		}
 		if (added < parent->value)
 		{
@@ -207,20 +161,87 @@ template<typename T>
 		insertFixup(daughter);
 	}
 
-	template<typename T>
-	Node<T>* RBT<T>::search(const T& value)const
+	void RBT<T>::insertFixup(Node<T> *x)
 	{
-		Node<T>* current = root;
+		while (x != root && x->parent->color == RED)
+		{
+			if (x->parent == x->parent->parent->left)
+			{
+				Node<T> *y = x->parent->parent->right;
+				if (y->color == RED)
+				{
+					/* uncle is RED */
+					x->parent->color = BLACK;
+					y->color = BLACK;
+					x->parent->parent->color = RED;
+					x = x->parent->parent;
+				}
+				else
+				{
+					/* uncle is BLACK */
+					if (x == x->parent->right)
+					{
+						/* make x a left child */
+						x = x->parent;
+						rotateLeft(x);
+					}
+					/* recolor and rotate */
+					x->parent->color = BLACK;
+					x->parent->parent->color = RED;
+					rotateRight(x->parent->parent);
+				}
+			}
+			else
+			{
+				/* mirror image of above code */
+				Node<T> *y = x->parent->parent->left;
+				if (y->color == RED)
+				{
+					/* uncle is RED */
+					x->parent->color = BLACK;
+					y->color = BLACK;
+					x->parent->parent->color = RED;
+					x = x->parent->parent;
+				}
+				else
+				{
+					/* uncle is BLACK */
+					if (x == x->parent->left)
+					{
+						x = x->parent;
+						rotateRight(x);
+					}
+					x->parent->color = BLACK;
+					x->parent->parent->color = RED;
+					rotateLeft(x->parent->parent);
+				}
+			}
+		}
+		root->color = BLACK;
+	}
+
+	Node<T>* findNode(const T& data)
+	{
+
+		/*******************************
+		*  find node containing data  *
+		*******************************/
+
+		Node<T> *current = root;
 		while (current != NIL)
 		{
-			if (value == current->value)
+			if (data == current->value)
 				return current;
 			else
 			{
-				if (value < current->value)
+				if (data < current->value)
+				{
 					current = current->left;
-				else current = current->right;
+				}
+				else
+					current = current->right;
 			}
 		}
 		return 0;
 	}
+};
