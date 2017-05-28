@@ -55,8 +55,9 @@ RBT<T>::~RBT()
 template <typename T>
 void RBT<T>::deleteNode(Node<T>* temp)
 {
-	if (!temp){
-		return 0;
+	if (!temp)
+	{
+		return;
 	}
 	deleteNode(temp->left);
 	deleteNode(temp->right);
