@@ -25,3 +25,4 @@ SCENARIO("findNode&insert", "[find_node]")
   REQUIRE(obj._color(2) == 1);
   REQUIRE(obj._color(1) == 0);
   REQUIRE(obj._color(3) == 0);
+  }
