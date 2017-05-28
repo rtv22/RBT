@@ -67,7 +67,7 @@ void RBT<T>::deleteNode(Node<T>* temp)
 template<typename T>
 bool RBT<T>::_color(const T& value)
 {
-	return search(value)->color;
+	return findNode(value)->color;
 }
 
 template <typename T>
