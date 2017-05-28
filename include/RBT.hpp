@@ -1,11 +1,10 @@
 #include <iostream>
 
-using namespace std;
+const bool black = 1;
+const bool red = 0;
 
-const bool BLACK = 1;
-const bool RED = 0;
 
-template <typename T>
+template<typename T> 
 struct Node
 {
 	T value;
@@ -15,138 +14,172 @@ struct Node
 	Node* parent;
 };
 
-template<typename T>
+template<typename T> 
 class RBT
 {
 private:
 	Node<T>* root;
 	Node<T>* NIL;
 public:
-RBT()
-{
-	NIL = new Node<T>;
-	NIL->left = NIL->parent = NIL->right = nullptr;
-	NIL->color = BLACK;
-	root = NIL;
-}
-
-bool _color(const T& value)
-{
-	return findNode(value)->color;
-}
-
-Node<T>* _root()
-{
-	return root;
-}
-
-Node<T>* _NIL()
-{
-	return NIL;
-}
-
-void rotateLeft(Node<T> *x)
-{
-	Node<T> *y = x->right;
-	x->right = y->left;
-	if (y->left != NIL)
+	RedBlackTree()
 	{
-		y->left->parent = x;
+		NIL = new Node<T>;
+		NIL->left = NIL->parent = NIL->right = nullptr;
+		NIL->color = black;
+		root = NIL;
 	}
-	if (y != NIL)
+
+	bool _color(const T& value)const
+	{
+		return search(value)->color;
+	}
+
+	Node<T>* _root()const
+	{
+		return root;
+	}
+
+	Node<T>* _NIL()const
+	{
+		return NIL;
+	}
+
+	void leftRotate(Node<T>* current)
+	{
+		Node<T>* temp = current->right;
+		current->right = temp->left;
+		if (temp->left != NIL)
+			temp->left->parent = current;
+		if (temp != NIL)
+			temp->parent = current->parent;
+		if (current->parent != NIL)
 		{
-			y->parent = x->parent;
-		}
-		if (x->parent)
-		{
-			if (x == x->parent->left)
-			{
-				x->parent->left = y;
-			}
+			if (current == current->parent->left)
+				current->parent->left = temp;
 			else
-			{
-				x->parent->right = y;
-			}
+				current->parent->right = temp;
 		}
 		else
 		{
-			root = y;
+			root = temp;
 		}
-		y->left = x;
-		if (x != NIL)
-		{
-			x->parent = y;
-		}
+		temp->left = current;
+		if (current != NIL)
+			current->parent = temp;
 	}
 
-	void rotateRight(Node<T> *x)
+	void rightRotate(Node<T> *current)
 	{
-		Node<T> *y = x->left;
-		x->left = y->right;
-		if (y->right != NIL)
+		Node<T> *temp = current->left;
+		current->left = temp->right;
+		if (temp->right != NIL)
+			temp->right->parent = current;
+		if (temp != NIL)
+			temp->parent = current->parent;
+		if (current->parent != NIL)
 		{
-			y->right->parent = x;
-		}
-		if (y != NIL)
-		{
-			y->parent = x->parent;
-		}
-		if (x->parent)
-		{
-			if (x == x->parent->right)
-			{
-				x->parent->right = y;
-			}
+			if (current == current->parent->right)
+				current->parent->right = temp;
 			else
-			{
-				x->parent->left = y;
-			}
+				current->parent->left = temp;
 		}
 		else
 		{
-			root = y;
+			root = temp;
 		}
-		y->right = x;
-		if (x != NIL)
-		{
-			x->parent = y;
-		}
+
+
+		temp->right = current;
+		if (current != NIL)
+			current->parent = temp;
 	}
+
+
+	void insertFixup(Node<T>* current)
+	{
+		while (current != root && current->parent->color == red)
+		{
+			if (current->parent == current->parent->parent->left)
+			{
+				Node<T>* temp = current->parent->parent->right;
+				if (temp->color == red)
+				{
+					current->parent->color = black;
+					temp->color = black;
+					current->parent->parent->color = red;
+					current = current->parent->parent;
+				}
+
+				else
+				{
+					if (current == current->parent->right)
+					{
+						current = current->parent;
+						left_rotate(current);
+					}
+					current->parent->color = black;
+					current->parent->parent->color = red;
+					right_rotate(current->parent->parent);
+				}
+			}
+
+			else
+			{
+				Node<T>* temp = current->parent->parent->left;
+				if (temp->color == red)
+				{
+					current->parent->color = black;
+					temp->color = black;
+					current->parent->parent->color = red;
+					current = current->parent->parent;
+				}
+				else
+				{
+					if (current == current->parent->left)
+					{
+						current = current->parent;
+						right_rotate(current);
+					}
+					current->parent->color = black;
+					current->parent->parent->color = red;
+					left_rotate(current->parent->parent);
+				}
+			}
+		}
+		root->color = black;
+	}
+
 
 	void insert(const T& added)
 	{
-		if (findNode(added))
+		if (search(added))
 		{
 			std::cout << "This value's already added in the tree\n";
 			return;
 		}
 		Node<T>* daughter = new Node<T>;
 		daughter->value = added;
-		daughter->color = RED;
+		daughter->color = red;
 		daughter->left = daughter->right = daughter->parent = NIL;
 		Node<T>* parent = NIL;
 		Node<T>* temp = root;
 		if (root == NIL)
 		{
 			root = daughter;
-			root->color = BLACK;
+			root->color = black;
 			return;
 		}
 		while (temp != NIL)
 		{
+
 			if (daughter->value == temp->value)
-			{
 				return;
-			}
+
 			parent = temp;
 			if (added < temp->value)
-			{
 				temp = temp->left;
-			}
 			else
-			{
 				temp = temp->right;
-			}
 		}
 		if (added < parent->value)
 		{
@@ -158,88 +191,21 @@ void rotateLeft(Node<T> *x)
 
 		}
 		daughter->parent = parent;
-		insertFixup(daughter);
+		insertFix(daughter);
 	}
 
-	void insertFixup(Node<T> *x)
+	Node<T>* search(const T& value)const
 	{
-		while (x != root && x->parent->color == RED)
-		{
-			if (x->parent == x->parent->parent->left)
-			{
-				Node<T> *y = x->parent->parent->right;
-				if (y->color == RED)
-				{
-					/* uncle is RED */
-					x->parent->color = BLACK;
-					y->color = BLACK;
-					x->parent->parent->color = RED;
-					x = x->parent->parent;
-				}
-				else
-				{
-					/* uncle is BLACK */
-					if (x == x->parent->right)
-					{
-						/* make x a left child */
-						x = x->parent;
-						rotateLeft(x);
-					}
-					/* recolor and rotate */
-					x->parent->color = BLACK;
-					x->parent->parent->color = RED;
-					rotateRight(x->parent->parent);
-				}
-			}
-			else
-			{
-				/* mirror image of above code */
-				Node<T> *y = x->parent->parent->left;
-				if (y->color == RED)
-				{
-					/* uncle is RED */
-					x->parent->color = BLACK;
-					y->color = BLACK;
-					x->parent->parent->color = RED;
-					x = x->parent->parent;
-				}
-				else
-				{
-					/* uncle is BLACK */
-					if (x == x->parent->left)
-					{
-						x = x->parent;
-						rotateRight(x);
-					}
-					x->parent->color = BLACK;
-					x->parent->parent->color = RED;
-					rotateLeft(x->parent->parent);
-				}
-			}
-		}
-		root->color = BLACK;
-	}
-
-	Node<T>* findNode(const T& data)
-	{
-
-		/*******************************
-		*  find node containing data  *
-		*******************************/
-
-		Node<T> *current = root;
+		Node<T>* current = root;
 		while (current != NIL)
 		{
-			if (data == current->value)
+			if (value == current->value)
 				return current;
 			else
 			{
-				if (data < current->value)
-				{
+				if (value < current->value)
 					current = current->left;
-				}
-				else
-					current = current->right;
+				else current = current->right;
 			}
 		}
 		return 0;
