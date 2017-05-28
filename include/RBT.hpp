@@ -40,7 +40,7 @@ RBT<T>::RBT()
 {
 	NIL = new Node<T>;
 	NIL->left = NIL->parent = NIL->right = nullptr;
-	NIL->color = black;
+	NIL->color = BLACK;
 	root = NIL;
 }
 
