@@ -21,7 +21,7 @@ private:
 	Node<T>* root;
 	Node<T>* NIL;
 public:
-	RedBlackTree()
+	RBT()
 	{
 		NIL = new Node<T>;
 		NIL->left = NIL->parent = NIL->right = nullptr;
