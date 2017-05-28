@@ -272,7 +272,7 @@ Node<T>* RBT<T>::findNode(const T& data)
 			return current;
 		else
 		{
-			if (data < current->value
+			if (data < current->value)
 			{
 				current = current->left;
 			}
