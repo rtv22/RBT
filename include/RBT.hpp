@@ -70,13 +70,13 @@ bool RBT<T>::_color(const T& value)
 }
 
 template <typename T>
-Node<T>* _root()
+Node<T>* RBT<T>::_root()
 {
 	return root;
 }
 
 template <typename T>
-Node<T>* _NIL()
+Node<T>* RBT<T>::_NIL()
 {
 	return NIL;
 }
