@@ -23,7 +23,7 @@ private:
 	Node<T>* NIL;
 public:
 	RBT();
-	~RBT();
+	//~RBT();
 	bool _color(const T&);
 	Node<T>* _root();
 	Node<T>* _NIL();
@@ -46,11 +46,11 @@ RBT<T>::RBT()
 	root = NIL;
 }
 
-template<typename T>
-RBT<T>::~RBT()
-{
-	deleteNode(root);
-}
+//template<typename T>
+//RBT<T>::~RBT()
+//{
+//	deleteNode(root);
+//}
 
 template <typename T>
 void RBT<T>::deleteNode(Node<T>* temp)
