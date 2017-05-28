@@ -268,13 +268,16 @@ Node<T>* RBT<T>::findNode(const T& data)
 	Node<T> *current = root;
 	while (current != NIL)
 	{
-		if (value == current->value)
+		if (data == current->data)
 			return current;
 		else
 		{
-			if (value < current->value)
+			if (data < current->data)
+			{
 				current = current->left;
-			else current = current->right;
+			}
+			else 
+				current = current->right;
 		}
 	}
 	return 0;
