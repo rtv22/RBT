@@ -191,7 +191,7 @@ public:
 
 		}
 		daughter->parent = parent;
-		insertFix(daughter);
+		insertFixup(daughter);
 	}
 
 	Node<T>* search(const T& value)const
