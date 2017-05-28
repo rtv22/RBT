@@ -2,11 +2,12 @@
 
 using namespace std;
 
+const bool BLACK = 1;
+const bool RED = 0;
+
 template <typename T>
 struct Node
 {
-	const bool BLACK = 1;
-	const bool RED = 0;
 	T value;
 	bool color;
 	Node* left;
@@ -25,8 +26,8 @@ public:
 	~RBT();
 	bool _color(const T&) const;
 	Node<T>* _root()const;
-	Node<T>* _NIL()const;
-	Node<T>* findNode(const T&;
+	Node<T>* _NIL*()const;
+	Node<T>* findNode(const T&);
 	void deleteNode(Node<T>*);
 	void rotateLeft(Node<T>*);
 	void rotateRight(Node<T>*);
@@ -41,12 +42,12 @@ RBT<T>::RBT()
 	NIL->parent = nullptr;
 	NIL->left = nullptr;
 	NIL->right = nullptr;
-	NIL->color = black;
+	NIL->color = BLACK;
 	root = NIL;
 }
 
 template<typename T>
-RBT::~RBT()
+RBT<T>::~RBT()
 {
 	deleteNode(root);
 }
@@ -83,7 +84,7 @@ Node<T>* _NIL()const
 template<typename T>
 void RBT<T>::rotateLeft(Node<T> *x)
 {
-	Node *y = x->right;
+	Node<T> *y = x->right;
 	x->right = y->left;
 	if (y->left != NIL)
 	{
@@ -117,7 +118,7 @@ void RBT<T>::rotateLeft(Node<T> *x)
 
 template<typename T>
 void RBT<T>::rotateRight(Node<T> *x) {
-	Node *y = x->left;
+	Node<T> *y = x->left;
 	x->left = y->right;
 	if (y->right != NIL) 
 	{
