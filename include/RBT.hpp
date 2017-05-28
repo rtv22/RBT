@@ -115,11 +115,11 @@ public:
 					if (current == current->parent->right)
 					{
 						current = current->parent;
-						left_rotate(current);
+						leftRotate(current);
 					}
 					current->parent->color = black;
 					current->parent->parent->color = red;
-					right_rotate(current->parent->parent);
+					rightRotate(current->parent->parent);
 				}
 			}
 
@@ -138,11 +138,11 @@ public:
 					if (current == current->parent->left)
 					{
 						current = current->parent;
-						right_rotate(current);
+						rightRotate(current);
 					}
 					current->parent->color = black;
 					current->parent->parent->color = red;
-					left_rotate(current->parent->parent);
+					leftRotate(current->parent->parent);
 				}
 			}
 		}
