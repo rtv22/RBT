@@ -156,7 +156,7 @@ void RBT<T>::insert(const T& added)
 	if (findNode(added))
 	{
 		std::cout << "This value's already added in the tree\n";
-		return 0;
+		return;
 	}
 	Node<T>* daughter = new Node<T>;
 	daughter->value = added;
@@ -174,7 +174,7 @@ void RBT<T>::insert(const T& added)
 	{
 		if (daughter->value == temp->value)
 		{
-			return 0;
+			return;
 		}
 		parent = temp;
 		if (added < temp->value)
