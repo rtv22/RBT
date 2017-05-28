@@ -3,26 +3,28 @@
 
 SCENARIO ("init", "[init]")
 {
-	RBT<int> obj;
-	REQUIRE(obj._root()==obj._NIL());
+  RBT<int> test;
+  REQUIRE(test._root() == test._NIL());
 }
 
-SCENARIO("findNode&insert", "[find_node]")
-  {
-    RBT<int> obj;
-    obj.insert(4);
-    obj.insert(2);
-    REQUIRE(obj.findNode(2) != 0);
-    REQUIRE(obj.findNode(5) == 0);
-  }
-  
-  SCENARIO("Color_check", "[color]")
-  {
-  	RBT<int> obj; 							//const bool BLACK = 1
- 	 obj.findNode(1);           						//const bool RED = 0;
- 	 obj.findNode(2);
- 	 obj.findNode(3);
-  	REQUIRE(obj._color(2) != 0);
-  	REQUIRE(obj._color(1) == 0);
-  	REQUIRE(obj._color(3) == 0);
-  }
+SCENARIO("insert", "[init]")
+{
+  RBT<int> test;
+  test.insert(1);
+  REQUIRE(test.search(1) != 0);
+}
+
+SCENARIO("insert_1", "[init]")
+{
+  RBT<int> tree;
+  tree.insert(1);
+  tree.insert(2);
+  tree.insert(3);
+  REQUIRE(tree._root() == tree.search(2));
+  REQUIRE(tree._color(2) == 1);
+  REQUIRE(tree._color(1) == 0);
+  REQUIRE(tree._color(3) == 0);
+  REQUIRE(tree.search(1) != 0);
+  REQUIRE(tree.search(2) != 0);
+  REQUIRE(tree.search(3) != 0);
+}
