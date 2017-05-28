@@ -24,9 +24,9 @@ private:
 public:
 	RBT();
 	~RBT();
-	bool _color(const T&) const;
-	Node<T>* _root()const;
-	Node<T>* _NIL*()const;
+	bool _color(const T&);
+	Node<T>* _root();
+	Node<T>* _NIL();
 	Node<T>* findNode(const T&);
 	void deleteNode(Node<T>*);
 	void rotateLeft(Node<T>*);
@@ -64,19 +64,19 @@ void RBT<T>::deleteNode(Node<T>* temp)
 }
 
 template<typename T>
-bool RBT<T>::_color(const T& value)const
+bool RBT<T>::_color(const T& value)
 {
 	return search(value)->color;
 }
 
 template <typename T>
-Node<T>* _root()const
+Node<T>* _root()
 {
 	return root;
 }
 
 template <typename T>
-Node<T>* _NIL()const
+Node<T>* _NIL()
 {
 	return NIL;
 }
@@ -206,7 +206,7 @@ void RBT<T>::insertFixup(Node<T> *x)
 	{
 		if (x->parent == x->parent->parent->left) 
 		{
-			Node *y = x->parent->parent->right;
+			Node<T> *y = x->parent->parent->right;
 			if (y->color == RED) 
 			{
 				/* uncle is RED */
