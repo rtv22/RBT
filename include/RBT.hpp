@@ -15,7 +15,7 @@ struct Node
 	Node* parent;
 };
 
-template<typename T> 
+template<typename T>
 class RBT
 {
 private:
@@ -94,7 +94,7 @@ void RBT<T>::rotateLeft(Node<T> *x)
 	{
 		y->parent = x->parent;
 	}
-	if (x->parent) 
+	if (x->parent)
 	{
 		if (x == x->parent->left)
 		{
@@ -105,7 +105,7 @@ void RBT<T>::rotateLeft(Node<T> *x)
 			x->parent->right = y;
 		}
 	}
-	else 
+	else
 	{
 		root = y;
 	}
@@ -120,7 +120,7 @@ template<typename T>
 void RBT<T>::rotateRight(Node<T> *x) {
 	Node<T> *y = x->left;
 	x->left = y->right;
-	if (y->right != NIL) 
+	if (y->right != NIL)
 	{
 		y->right->parent = x;
 	}
@@ -128,7 +128,7 @@ void RBT<T>::rotateRight(Node<T> *x) {
 	{
 		y->parent = x->parent;
 	}
-	if (x->parent) 
+	if (x->parent)
 	{
 		if (x == x->parent->right)
 		{
@@ -139,7 +139,7 @@ void RBT<T>::rotateRight(Node<T> *x) {
 			x->parent->left = y;
 		}
 	}
-	else 
+	else
 	{
 		root = y;
 	}
@@ -168,7 +168,7 @@ void RBT<T>::insert(const T& added)
 	{
 		root = daughter;
 		root->color = BLACK;
-		return 0;
+		return;
 	}
 	while (temp != NIL)
 	{
@@ -196,18 +196,18 @@ void RBT<T>::insert(const T& added)
 
 	}
 	daughter->parent = parent;
-	insertFix(daughter);
+	insertFixup(daughter);
 }
 
 template<typename T>
-void RBT<T>::insertFixup(Node<T> *x) 
+void RBT<T>::insertFixup(Node<T> *x)
 {
-	while (x != root && x->parent->color == RED) 
+	while (x != root && x->parent->color == RED)
 	{
-		if (x->parent == x->parent->parent->left) 
+		if (x->parent == x->parent->parent->left)
 		{
 			Node<T> *y = x->parent->parent->right;
-			if (y->color == RED) 
+			if (y->color == RED)
 			{
 				/* uncle is RED */
 				x->parent->color = BLACK;
@@ -215,7 +215,7 @@ void RBT<T>::insertFixup(Node<T> *x)
 				x->parent->parent->color = RED;
 				x = x->parent->parent;
 			}
-			else 
+			else
 			{
 				/* uncle is BLACK */
 				if (x == x->parent->right) {
@@ -233,7 +233,7 @@ void RBT<T>::insertFixup(Node<T> *x)
 		{
 			/* mirror image of above code */
 			Node<T> *y = x->parent->parent->left;
-			if (y->color == RED) 
+			if (y->color == RED)
 			{
 				/* uncle is RED */
 				x->parent->color = BLACK;
@@ -241,7 +241,7 @@ void RBT<T>::insertFixup(Node<T> *x)
 				x->parent->parent->color = RED;
 				x = x->parent->parent;
 			}
-			else 
+			else
 			{
 				/* uncle is BLACK */
 				if (x == x->parent->left) {
@@ -268,15 +268,15 @@ Node<T>* RBT<T>::findNode(const T& data)
 	Node<T> *current = root;
 	while (current != NIL)
 	{
-		if (data == current->data)
+		if (data == current->value)
 			return current;
 		else
 		{
-			if (data < current->data)
+			if (data < current->value
 			{
 				current = current->left;
 			}
-			else 
+			else
 				current = current->right;
 		}
 	}
