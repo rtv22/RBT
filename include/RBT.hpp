@@ -153,7 +153,7 @@ void RBT<T>::rotateRight(Node<T> *x) {
 template <typename T>
 void RBT<T>::insert(const T& added)
 {
-	if (search(added))
+	if (findNode(added))
 	{
 		std::cout << "This value's already added in the tree\n";
 		return 0;
