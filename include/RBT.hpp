@@ -10,9 +10,9 @@ struct Node
 {
 	T value;
 	bool color;
-	Node* left;
-	Node* right;
-	Node* parent;
+	Node<T>* left;
+	Node<T>* right;
+	Node<T>* parent;
 };
 
 template<typename T>
@@ -23,12 +23,12 @@ private:
 	Node<T>* NIL;
 public:
 	RBT();
-	~RBT();
 	bool _color(const T&);
 	Node<T>* _root();
 	Node<T>* _NIL();
 	Node<T>* findNode(const T&);
 	void _delete(Node<T> *node);
+	void DelNode(Node<T>*node);
 	void rotateLeft(Node<T>*);
 	void rotateRight(Node<T>*);
 	void insert(const T&);
@@ -39,15 +39,9 @@ template <typename T>
 RBT<T>::RBT()
 {
 	NIL = new Node<T>;
-	NIL->parent = NIL->left = NIL->right = nullptr;
-	NIL->color = BLACK;
-	root=NIL;
-}
-
-template<typename T>
-RBT<T>::~RBT()
-{
-	_delete(root);
+	NIL->left = NIL->parent = NIL->right = nullptr;
+	NIL->color = black;
+	root = NIL;
 }
 
 template<typename T>
@@ -205,7 +199,8 @@ void RBT<T>::insertFixup(Node<T> *x)
 			else
 			{
 				/* uncle is BLACK */
-				if (x == x->parent->right) {
+				if (x == x->parent->right) 
+				{
 					/* make x a left child */
 					x = x->parent;
 					rotateLeft(x);
@@ -231,7 +226,8 @@ void RBT<T>::insertFixup(Node<T> *x)
 			else
 			{
 				/* uncle is BLACK */
-				if (x == x->parent->left) {
+				if (x == x->parent->left) 
+				{
 					x = x->parent;
 					rotateRight(x);
 				}
@@ -268,16 +264,4 @@ Node<T>* RBT<T>::findNode(const T& data)
 		}
 	}
 	return 0;
-}
-
-template <typename T>
-void RBT<T>::_delete(Node<T>* node)
-{
-	if (!node)
-		return;
-
-	_delete(node->left);
-	_delete(node->right);
-
-	delete node;
 }
