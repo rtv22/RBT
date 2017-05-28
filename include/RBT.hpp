@@ -23,10 +23,12 @@ private:
 	Node<T>* NIL;
 public:
 	RBT();
+	~RBT();
 	bool _color(const T&);
 	Node<T>* _root();
 	Node<T>* _NIL();
 	Node<T>* findNode(const T&);
+	void _delete(Node<T> *node);
 	void rotateLeft(Node<T>*);
 	void rotateRight(Node<T>*);
 	void insert(const T&);
@@ -37,11 +39,14 @@ template <typename T>
 RBT<T>::RBT()
 {
 	NIL = new Node<T>;
-	NIL->parent = nullptr;
-	NIL->left = nullptr;
-	NIL->right = nullptr;
+	NIL->parent = NIL->left = NIL->right = nullptr;
 	NIL->color = BLACK;
-	root = NIL;
+}
+
+template<typename T>
+RBT<T>::~RBT()
+{
+	_delete(root);
 }
 
 template<typename T>
@@ -262,4 +267,16 @@ Node<T>* RBT<T>::findNode(const T& data)
 		}
 	}
 	return 0;
+}
+
+template <typename T>
+void RBT<T>::_delete(Node<T>* node)
+{
+	if (!node)
+		return;
+
+	_delete(node->left);
+	_delete(node->right);
+
+	delete node;
 }
